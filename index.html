@@ -1,0 +1,2125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Match — Подбор личного ассистента под ключ за 14 дней</title>
+<meta name="description" content="Подбираем личного ассистента под вашу задачу. Берём на себя весь поиск, проверку и онбординг. Гарантия замены 60 дней." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* Surfaces */
+    --surface: #f8f9fa;
+    --surface-dim: #d9dadb;
+    --surface-bright: #ffffff;
+    --container-lowest: #ffffff;
+    --container-low: #f3f4f5;
+    --container: #edeeef;
+    --container-high: #e7e8e9;
+    --container-highest: #e1e3e4;
+
+    /* Text */
+    --on-surface: #191c1d;
+    --on-surface-variant: #44474c;
+    --outline: #75777c;
+    --outline-variant: #c5c6cc;
+
+    /* Primary navy */
+    --primary: #050e1a;
+    --primary-container: #1b2430;
+    --on-primary: #ffffff;
+    --on-primary-container: #828b9a;
+    --primary-soft: #dae3f4;
+
+    /* Secondary sand */
+    --secondary: #6a5c4b;
+    --secondary-container: #f2e0c9;
+    --secondary-soft: #f3efea;
+    --secondary-mid: #d5c4ae;
+    --secondary-warm: #c5b49f;
+
+    /* Functional */
+    --success: #506b3e;
+    --error: #ba1a1a;
+
+    /* Inverse */
+    --inverse-surface: #2e3132;
+    --inverse-on-surface: #f0f1f2;
+
+    --radius-sm: 0.25rem;
+    --radius: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
+    --radius-full: 9999px;
+
+    --container-max: 1280px;
+    --gutter: 24px;
+    --ease: cubic-bezier(.22, .61, .36, 1);
+    --shadow-ambient: 0 8px 20px -4px rgba(5, 14, 26, .08);
+    --shadow-elevated: 0 16px 40px -8px rgba(5, 14, 26, .14);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+    background: var(--surface);
+    color: var(--on-surface);
+    font-size: 16px;
+    line-height: 1.55;
+    font-weight: 400;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .container {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+  @media (max-width: 720px) { .container { padding: 0 16px; } }
+
+  /* ─────────── TYPE SYSTEM ─────────── */
+
+  h1, h2, h3, h4, h5 {
+    color: var(--on-surface);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+  .display-lg {
+    font-size: clamp(36px, 5vw, 56px);
+    line-height: 1.05;
+    letter-spacing: -0.022em;
+    font-weight: 700;
+  }
+  .display-md {
+    font-size: clamp(28px, 3.8vw, 40px);
+    line-height: 1.1;
+    letter-spacing: -0.018em;
+    font-weight: 700;
+  }
+  .headline-lg { font-size: clamp(24px, 2.6vw, 32px); font-weight: 600; letter-spacing: -0.01em; line-height: 1.2; }
+  .headline-md { font-size: 24px; font-weight: 600; line-height: 1.25; }
+  .headline-sm { font-size: 20px; font-weight: 600; line-height: 1.3; }
+  .body-lg { font-size: 18px; line-height: 1.55; font-weight: 400; color: var(--on-surface-variant); }
+  .body-md { font-size: 16px; line-height: 1.5; font-weight: 400; color: var(--on-surface-variant); }
+  .label-md { font-size: 14px; font-weight: 500; letter-spacing: 0.01em; }
+  .label-sm {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--on-surface-variant);
+  }
+
+  .accent { color: var(--secondary); font-weight: 700; }
+  .accent-navy { color: var(--primary-container); font-weight: 700; }
+
+  /* ─────────── LOGO ─────────── */
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--on-surface);
+  }
+  .logo__icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+  }
+  .logo__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+  .logo__name {
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    color: var(--primary-container);
+  }
+  .logo__tag {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--secondary);
+    margin-top: 4px;
+  }
+
+  /* ─────────── NAV ─────────── */
+
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(248, 249, 250, .82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid transparent;
+    transition: border-color .3s var(--ease), background .3s var(--ease);
+  }
+  .nav.scrolled {
+    border-bottom-color: var(--outline-variant);
+    background: rgba(248, 249, 250, .92);
+  }
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 40px;
+    max-width: var(--container-max);
+    margin: 0 auto;
+    gap: 16px;
+  }
+  @media (max-width: 720px) {
+    .nav__inner { padding: 12px 16px; }
+    .nav__meta { display: none; }
+  }
+  .nav__meta {
+    font-size: 13px;
+    color: var(--on-surface-variant);
+    font-weight: 500;
+    flex: 1;
+    text-align: center;
+  }
+
+  /* ─────────── BUTTONS ─────────── */
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 24px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    border-radius: var(--radius);
+    transition: all .25s var(--ease);
+    white-space: nowrap;
+  }
+  .btn--primary {
+    background: var(--primary-container);
+    color: var(--on-primary);
+  }
+  .btn--primary:hover {
+    background: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-ambient);
+  }
+  .btn--secondary {
+    background: var(--secondary-container);
+    color: var(--secondary);
+  }
+  .btn--secondary:hover {
+    background: var(--secondary-mid);
+    color: var(--primary-container);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-ambient);
+  }
+  .btn--ghost {
+    background: transparent;
+    color: var(--on-surface);
+    border: 1px solid var(--outline-variant);
+  }
+  .btn--ghost:hover {
+    border-color: var(--primary-container);
+    background: var(--container);
+  }
+  .btn--lg {
+    padding: 18px 32px;
+    font-size: 16px;
+    border-radius: var(--radius);
+  }
+  .btn__arrow { transition: transform .25s var(--ease); display: inline-block; }
+  .btn:hover .btn__arrow { transform: translateX(3px); }
+
+  .micro { font-size: 13px; color: var(--on-surface-variant); margin-top: 14px; }
+
+  /* ─────────── SECTIONS ─────────── */
+
+  section { position: relative; }
+  .section { padding: 100px 0; }
+  .section--tight { padding: 64px 0; }
+  @media (max-width: 720px) { .section { padding: 64px 0; } }
+
+  .section-header { max-width: 880px; margin-bottom: 56px; }
+  .section-header__kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .section-header__kicker::before {
+    content: '';
+    width: 28px; height: 1px;
+    background: var(--secondary);
+  }
+  .section-header__num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; height: 32px;
+    border-radius: var(--radius-full);
+    background: var(--secondary-container);
+    color: var(--secondary);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-right: 12px;
+  }
+
+  /* ─────────── HERO ─────────── */
+
+  .hero {
+    padding: 64px 0 100px;
+    position: relative;
+  }
+  .hero__inner {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+  @media (max-width: 980px) {
+    .hero { padding: 40px 0 64px; }
+    .hero__inner { grid-template-columns: 1fr; gap: 40px; }
+  }
+
+  .hero__kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    background: var(--secondary-container);
+    color: var(--secondary);
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .hero__kicker::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--secondary);
+    border-radius: 50%;
+  }
+  .hero__title {
+    margin-bottom: 28px;
+  }
+  .hero__title .highlight {
+    color: var(--secondary);
+    position: relative;
+    white-space: nowrap;
+  }
+  .hero__title .underline {
+    background: linear-gradient(180deg, transparent 70%, var(--secondary-container) 70%);
+    padding: 0 4px;
+  }
+  .hero__lede { max-width: 540px; margin-bottom: 36px; }
+  .hero__ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .hero__card {
+    background: var(--container-lowest);
+    border-radius: var(--radius-lg);
+    padding: 36px;
+    box-shadow: var(--shadow-ambient);
+    border-top: 4px solid var(--secondary);
+    position: relative;
+  }
+  @media (max-width: 720px) { .hero__card { padding: 28px 24px; } }
+  .hero__card-label {
+    display: inline-block;
+    margin-bottom: 22px;
+  }
+  .hero__list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .hero__list li {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 14px;
+    align-items: start;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--on-surface);
+  }
+  .hero__list-num {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-full);
+    background: var(--primary-container);
+    color: var(--on-primary);
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* Subtle hero decorative */
+  .hero__deco {
+    position: absolute;
+    right: -120px;
+    top: 40%;
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(213, 196, 174, .35) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* ─────────── TRUST STRIP ─────────── */
+
+  .trust-strip {
+    background: var(--container);
+    padding: 28px 0;
+    border-top: 1px solid var(--outline-variant);
+    border-bottom: 1px solid var(--outline-variant);
+  }
+  .trust-strip__inner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    text-align: center;
+  }
+  @media (max-width: 720px) { .trust-strip__inner { grid-template-columns: repeat(2, 1fr); gap: 16px; } }
+  .trust-strip__item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .trust-strip__value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary-container);
+    letter-spacing: -0.01em;
+  }
+  .trust-strip__label {
+    font-size: 13px;
+    color: var(--on-surface-variant);
+    font-weight: 500;
+  }
+
+  /* ─────────── TEST TEASER ─────────── */
+
+  .teaser {
+    background: var(--container-low);
+  }
+  .teaser__card {
+    background: var(--container-lowest);
+    border-radius: var(--radius-lg);
+    padding: 56px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 48px;
+    box-shadow: var(--shadow-ambient);
+    border-top: 4px solid var(--secondary);
+  }
+  @media (max-width: 880px) {
+    .teaser__card { grid-template-columns: 1fr; padding: 40px 28px; gap: 28px; }
+  }
+  .teaser__title { margin-bottom: 12px; }
+  .teaser__desc { color: var(--on-surface-variant); font-size: 17px; line-height: 1.55; max-width: 560px; }
+
+  /* ─────────── BENEFITS ─────────── */
+
+  .benefits {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 720px) { .benefits { grid-template-columns: 1fr; } }
+  .benefit {
+    background: var(--container-lowest);
+    border-radius: var(--radius-md);
+    padding: 32px 28px;
+    transition: all .25s var(--ease);
+    border: 1px solid transparent;
+  }
+  .benefit:hover {
+    box-shadow: var(--shadow-ambient);
+    border-color: var(--outline-variant);
+    transform: translateY(-2px);
+  }
+  .benefit__icon {
+    width: 44px; height: 44px;
+    background: var(--secondary-container);
+    color: var(--secondary);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .benefit__title { margin-bottom: 8px; font-size: 18px; font-weight: 600; }
+  .benefit__desc { font-size: 15px; color: var(--on-surface-variant); line-height: 1.55; }
+
+  /* ─────────── RECOGNIZE ─────────── */
+
+  .recognize {
+    background: var(--container);
+  }
+  .recognize__grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 64px;
+    align-items: start;
+  }
+  @media (max-width: 980px) {
+    .recognize__grid { grid-template-columns: 1fr; gap: 32px; }
+  }
+  .recognize__claim {
+    margin-bottom: 24px;
+  }
+  .recognize__sublabel {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--secondary);
+    margin-bottom: 20px;
+    display: block;
+  }
+  .situations {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 40px;
+  }
+  .situations li {
+    background: var(--container-lowest);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    gap: 14px;
+    align-items: start;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--on-surface);
+    transition: transform .2s var(--ease);
+  }
+  .situations li:hover { transform: translateX(4px); }
+  .situations li::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--secondary);
+    border-radius: 50%;
+    margin-top: 8px;
+  }
+
+  .emotions-wrap {
+    background: var(--container-lowest);
+    border-radius: var(--radius-md);
+    padding: 28px;
+    border-left: 4px solid var(--secondary);
+  }
+  .emotions {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .emotions li {
+    font-size: 15px;
+    color: var(--on-surface-variant);
+    line-height: 1.5;
+  }
+
+  .recognize__closer {
+    margin-top: 32px;
+    font-size: 16px;
+    color: var(--primary-container);
+    font-weight: 600;
+  }
+
+  /* ─────────── PROCESS / STEPS ─────────── */
+
+  .process__lead {
+    background: var(--container-lowest);
+    border-radius: var(--radius-md);
+    padding: 28px 32px;
+    margin-bottom: 48px;
+    border-left: 4px solid var(--primary-container);
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--on-surface);
+    max-width: 880px;
+  }
+  .process__lead strong { color: var(--secondary); }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .step {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 24px;
+    background: var(--container-lowest);
+    border-radius: var(--radius-md);
+    padding: 28px 32px;
+    transition: all .25s var(--ease);
+    border: 1px solid transparent;
+  }
+  .step:hover {
+    box-shadow: var(--shadow-ambient);
+    border-color: var(--outline-variant);
+    transform: translateX(4px);
+  }
+  .step__num {
+    width: 48px; height: 48px;
+    background: var(--primary-container);
+    color: var(--on-primary);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+  .step__body { padding-top: 8px; }
+  .step__title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+  .step__desc { color: var(--on-surface-variant); font-size: 15px; line-height: 1.55; max-width: 740px; }
+  @media (max-width: 720px) {
+    .step { padding: 24px; grid-template-columns: 48px 1fr; gap: 18px; }
+    .step__num { width: 40px; height: 40px; font-size: 16px; }
+  }
+
+  /* ─────────── OUTCOME ─────────── */
+
+  .outcome {
+    background: var(--primary);
+    color: var(--on-primary);
+    position: relative;
+    overflow: hidden;
+  }
+  .outcome::after {
+    content: '';
+    position: absolute;
+    bottom: -250px;
+    right: -150px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(213, 196, 174, .12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .outcome h2, .outcome .section-header__title { color: var(--on-primary); }
+  .outcome .section-header__kicker::before { background: var(--secondary-warm); }
+  .outcome .section-header__num { background: rgba(245, 224, 201, .15); color: var(--secondary-warm); }
+  .outcome .label-sm { color: var(--secondary-warm); }
+  .outcome__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+  }
+  @media (max-width: 980px) { .outcome__grid { grid-template-columns: 1fr; gap: 40px; } }
+
+  .outcome__feel {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .outcome__feel-card {
+    background: var(--primary-container);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    border: 1px solid rgba(245, 224, 201, .08);
+  }
+  .outcome__feel-icon {
+    color: var(--secondary-warm);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+  }
+  .outcome__feel-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--on-primary);
+    margin-bottom: 6px;
+  }
+  .outcome__feel-desc { font-size: 14px; color: rgba(240, 241, 242, .65); line-height: 1.5; }
+
+  .outcome__caps {
+    padding-top: 8px;
+  }
+  .outcome__caps h3 { color: var(--on-primary); font-size: 22px; font-weight: 600; margin-bottom: 24px; }
+  .outcome__caps ul { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .outcome__caps li {
+    color: rgba(240, 241, 242, .85);
+    font-size: 16px;
+    padding-left: 28px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .outcome__caps li::before {
+    content: '→';
+    position: absolute;
+    left: 0; top: 0;
+    color: var(--secondary-warm);
+    font-weight: 600;
+  }
+
+  /* ─────────── PROOF ─────────── */
+
+  .proof__metrics {
+    background: var(--container-lowest);
+    border-radius: var(--radius-lg);
+    padding: 8px;
+    margin-bottom: 56px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    box-shadow: var(--shadow-ambient);
+  }
+  @media (max-width: 880px) { .proof__metrics { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .proof__metrics { grid-template-columns: 1fr; } }
+  .metric {
+    padding: 28px 24px;
+    border-radius: var(--radius);
+    transition: background .25s;
+  }
+  .metric:hover { background: var(--container-low); }
+  .metric__value {
+    font-size: clamp(32px, 3.5vw, 44px);
+    line-height: 1;
+    font-weight: 700;
+    color: var(--primary-container);
+    margin-bottom: 10px;
+    letter-spacing: -0.02em;
+  }
+  .metric__value .unit { font-size: 22px; color: var(--secondary); font-weight: 600; margin-left: 2px; }
+  .metric__label {
+    font-size: 13px;
+    color: var(--on-surface-variant);
+    line-height: 1.4;
+    font-weight: 500;
+  }
+
+  .cases {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 880px) { .cases { grid-template-columns: 1fr; } }
+  .case {
+    background: var(--container-lowest);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    border-top: 4px solid var(--secondary);
+    transition: all .25s var(--ease);
+    display: flex;
+    flex-direction: column;
+  }
+  .case:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-elevated);
+  }
+  .case__tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .chip {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: var(--radius-full);
+    background: var(--secondary-soft);
+    color: var(--secondary);
+  }
+  .chip--navy {
+    background: var(--container-high);
+    color: var(--on-surface);
+  }
+  .case__quote {
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--on-surface);
+    font-weight: 500;
+    margin-bottom: 24px;
+    flex-grow: 1;
+  }
+  .case__author {
+    padding-top: 20px;
+    border-top: 1px solid var(--outline-variant);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .case__avatar {
+    width: 44px; height: 44px;
+    background: var(--secondary-container);
+    color: var(--secondary);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .case__author-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .case__name { font-weight: 700; font-size: 14px; color: var(--on-surface); }
+  .case__role { font-size: 13px; color: var(--on-surface-variant); }
+  .case__result {
+    margin-top: 18px;
+    padding: 12px 16px;
+    background: var(--container);
+    border-radius: var(--radius);
+    font-size: 13px;
+    color: var(--success);
+    font-weight: 600;
+  }
+
+  /* ─────────── DOUBTS ─────────── */
+
+  .doubts {
+    background: var(--container);
+  }
+  .doubts__list {
+    max-width: 920px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .doubt {
+    background: var(--container-lowest);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: box-shadow .25s var(--ease);
+  }
+  .doubt[open] { box-shadow: var(--shadow-ambient); }
+  .doubt__q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 22px 28px;
+    cursor: pointer;
+    list-style: none;
+  }
+  .doubt__q::-webkit-details-marker { display: none; }
+  .doubt__q-text {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--on-surface);
+    line-height: 1.35;
+  }
+  .doubt__icon {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-full);
+    background: var(--secondary-container);
+    color: var(--secondary);
+    flex-shrink: 0;
+    position: relative;
+    transition: all .3s var(--ease);
+  }
+  .doubt__icon::before, .doubt__icon::after {
+    content: '';
+    position: absolute;
+    background: currentColor;
+    border-radius: 2px;
+    transition: transform .3s var(--ease);
+  }
+  .doubt__icon::before {
+    top: 50%; left: 28%; right: 28%; height: 2px; transform: translateY(-50%);
+  }
+  .doubt__icon::after {
+    left: 50%; top: 28%; bottom: 28%; width: 2px; transform: translateX(-50%);
+  }
+  .doubt[open] .doubt__icon { background: var(--primary-container); color: var(--on-primary); }
+  .doubt[open] .doubt__icon::after { transform: translateX(-50%) rotate(90deg); }
+  .doubt__a {
+    padding: 0 28px 26px 28px;
+    color: var(--on-surface-variant);
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 800px;
+  }
+
+  /* ─────────── COMPARE ─────────── */
+
+  .compare__table {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-ambient);
+    background: var(--container-lowest);
+  }
+  .compare__row {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 1fr 1.2fr;
+    border-bottom: 1px solid var(--outline-variant);
+  }
+  .compare__row:last-child { border-bottom: none; }
+  .compare__row--head { background: var(--primary-container); }
+  .compare__cell {
+    padding: 22px 24px;
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--on-surface-variant);
+    border-right: 1px solid var(--outline-variant);
+    display: flex;
+    align-items: center;
+  }
+  .compare__cell:last-child { border-right: none; }
+  .compare__cell--head {
+    color: var(--on-primary);
+    font-weight: 600;
+    font-size: 15px;
+    text-align: center;
+    justify-content: center;
+    background: var(--primary-container);
+    border-right-color: rgba(245, 224, 201, .1);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .compare__cell--head.ours {
+    background: var(--secondary-container);
+    color: var(--secondary);
+    border-right-color: var(--secondary-mid);
+  }
+  .compare__cell--label {
+    font-weight: 600;
+    color: var(--on-surface);
+    background: var(--container-low);
+  }
+  .compare__cell--ours {
+    background: var(--secondary-soft);
+    color: var(--on-surface);
+    font-weight: 500;
+  }
+  @media (max-width: 880px) {
+    .compare__table { background: transparent; box-shadow: none; }
+    .compare__row {
+      display: block;
+      background: var(--container-lowest);
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .compare__row--head { display: none; }
+    .compare__cell {
+      display: block;
+      border-right: none;
+      border-bottom: 1px solid var(--outline-variant);
+    }
+    .compare__cell:last-child { border-bottom: none; }
+    .compare__cell::before {
+      content: attr(data-label);
+      display: block;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--on-surface-variant);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+    .compare__cell--label::before { display: none; }
+  }
+
+  /* ─────────── FINAL CTA ─────────── */
+
+  .final-cta {
+    background: var(--primary);
+    color: var(--on-primary);
+    text-align: center;
+    padding: 120px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .final-cta::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 900px; height: 900px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(213, 196, 174, .15) 0%, transparent 55%);
+    pointer-events: none;
+  }
+  .final-cta__inner {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .final-cta__kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: var(--radius-full);
+    background: rgba(245, 224, 201, .15);
+    color: var(--secondary-warm);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .final-cta__title {
+    color: var(--on-primary);
+    font-size: clamp(34px, 5vw, 56px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  .final-cta__title .accent { color: var(--secondary-warm); }
+  .final-cta__lede {
+    font-size: 18px;
+    color: rgba(240, 241, 242, .8);
+    margin-bottom: 40px;
+    line-height: 1.5;
+  }
+  .final-cta .btn--primary {
+    background: var(--on-primary);
+    color: var(--primary);
+  }
+  .final-cta .btn--primary:hover {
+    background: var(--secondary-warm);
+    color: var(--primary);
+  }
+
+  /* ─────────── FOOTER ─────────── */
+
+  footer {
+    background: var(--container);
+    padding: 48px 0 32px;
+    border-top: 1px solid var(--outline-variant);
+  }
+  .footer__inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 720px) {
+    .footer__inner { grid-template-columns: 1fr; text-align: center; gap: 24px; }
+    .footer__links { justify-content: center; }
+  }
+  .footer__copy {
+    font-size: 13px;
+    color: var(--on-surface-variant);
+    margin-top: 12px;
+  }
+  .footer__links { display: flex; gap: 28px; }
+  .footer__links a {
+    font-size: 14px;
+    color: var(--on-surface-variant);
+    text-decoration: none;
+    transition: color .2s;
+    font-weight: 500;
+  }
+  .footer__links a:hover { color: var(--primary-container); }
+
+  /* ─────────── REVEAL ─────────── */
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity .7s var(--ease), transform .7s var(--ease);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─────────── MODAL ─────────── */
+
+  .modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 14, 26, .55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 1100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity .3s var(--ease);
+  }
+  .modal.open { display: flex; opacity: 1; }
+  .modal__dialog {
+    background: var(--container-lowest);
+    max-width: 640px;
+    width: 100%;
+    border-radius: var(--radius-xl);
+    padding: 48px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: var(--shadow-elevated);
+    transform: translateY(20px);
+    transition: transform .4s var(--ease);
+  }
+  .modal.open .modal__dialog { transform: translateY(0); }
+  @media (max-width: 600px) { .modal__dialog { padding: 32px 24px; } }
+
+  .modal__close {
+    position: absolute;
+    top: 20px; right: 20px;
+    width: 36px; height: 36px;
+    border-radius: var(--radius-full);
+    background: var(--container);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .2s;
+    color: var(--on-surface);
+  }
+  .modal__close:hover { background: var(--primary-container); color: var(--on-primary); }
+
+  .modal__progress {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 32px;
+  }
+  .modal__progress span {
+    flex: 1;
+    height: 3px;
+    background: var(--container-high);
+    border-radius: var(--radius-full);
+    transition: background .4s var(--ease);
+  }
+  .modal__progress span.done { background: var(--secondary); }
+
+  .modal__step { display: none; animation: fadeIn .35s var(--ease); }
+  .modal__step.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .modal__eyebrow {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--secondary);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .modal__q {
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 24px;
+    color: var(--on-surface);
+    letter-spacing: -0.01em;
+  }
+  .modal__options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+  .modal__option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--container-low);
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all .2s var(--ease);
+    font-size: 15px;
+    color: var(--on-surface);
+  }
+  .modal__option:hover { background: var(--secondary-soft); border-color: var(--secondary-mid); }
+  .modal__option input { accent-color: var(--secondary); }
+  .modal__option.selected {
+    background: var(--secondary-container);
+    border-color: var(--secondary);
+    color: var(--on-surface);
+    font-weight: 500;
+  }
+
+  .modal__nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+  }
+  .modal__back {
+    font-size: 14px;
+    color: var(--on-surface-variant);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: color .2s;
+    padding: 8px 0;
+  }
+  .modal__back:hover { color: var(--primary-container); }
+  .modal__next {
+    padding: 12px 28px;
+    background: var(--primary-container);
+    color: var(--on-primary);
+    border-radius: var(--radius);
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all .25s;
+  }
+  .modal__next:disabled { opacity: 0.4; cursor: not-allowed; }
+  .modal__next:not(:disabled):hover { background: var(--primary); transform: translateY(-1px); }
+
+  .modal__form { display: flex; flex-direction: column; gap: 12px; }
+  .modal__form input[type="text"],
+  .modal__form input[type="email"],
+  .modal__form input[type="tel"] {
+    padding: 14px 16px;
+    background: var(--container-low);
+    border: 1px solid var(--outline-variant);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--on-surface);
+    outline: none;
+    transition: all .2s;
+  }
+  .modal__form input:focus {
+    border-color: var(--primary-container);
+    background: var(--container-lowest);
+    box-shadow: 0 0 0 3px var(--secondary-container);
+  }
+  .modal__checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--on-surface-variant);
+    cursor: pointer;
+    line-height: 1.45;
+    margin-top: 4px;
+  }
+  .modal__checkbox input { margin-top: 3px; accent-color: var(--secondary); flex-shrink: 0; }
+
+  .modal__success {
+    text-align: center;
+    padding: 24px 0;
+  }
+  .modal__success-icon {
+    width: 72px; height: 72px;
+    margin: 0 auto 24px;
+    border-radius: var(--radius-full);
+    background: var(--secondary-container);
+    color: var(--secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal__success h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--on-surface);
+  }
+  .modal__success p { color: var(--on-surface-variant); font-size: 16px; line-height: 1.55; }
+
+  .lock { overflow: hidden; }
+</style>
+</head>
+<body>
+
+<!-- ─────────── LOGO SVG (template) ─────────── -->
+<svg width="0" height="0" style="position: absolute;" aria-hidden="true">
+  <defs>
+    <symbol id="logo-mark" viewBox="0 0 120 120">
+      <!-- Left person (navy) -->
+      <circle cx="34" cy="22" r="14" fill="#1b2430"/>
+      <path d="M 18,44
+               L 50,44
+               L 50,78
+               Q 60,84 60,96
+               L 50,96
+               L 50,112
+               L 18,112
+               Z"
+            fill="#1b2430"/>
+      <!-- Right person (sand) -->
+      <circle cx="86" cy="22" r="14" fill="#6a5c4b"/>
+      <path d="M 102,44
+               L 70,44
+               L 70,96
+               L 60,96
+               Q 60,84 70,78
+               L 70,112
+               L 102,112
+               Z"
+            fill="#6a5c4b"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ─────────── NAV ─────────── -->
+<nav class="nav" id="nav">
+  <div class="nav__inner">
+    <a href="#" class="logo" aria-label="match — Подбор ассистентов">
+      <svg class="logo__icon" aria-hidden="true"><use href="#logo-mark"/></svg>
+      <span class="logo__text">
+        <span class="logo__name">match</span>
+        <span class="logo__tag">Подбор ассистентов</span>
+      </span>
+    </a>
+    <div class="nav__meta">Личный ассистент под ключ за 14 дней</div>
+    <button class="btn btn--primary" onclick="scrollToCta()">
+      Записаться на разбор
+      <span class="btn__arrow">→</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ─────────── HERO ─────────── -->
+<section class="hero">
+  <div class="container">
+    <div class="hero__inner">
+      <div class="hero__left">
+        <div class="reveal">
+          <div class="hero__kicker">Сервис подбора ассистентов</div>
+        </div>
+        <h1 class="display-lg hero__title reveal">
+          Найдём вам ассистента, <br>
+          который <span class="accent">реально работает</span>, <br>
+          и введём в работу <span class="underline">за 14 дней</span>
+        </h1>
+        <p class="body-lg hero__lede reveal">
+          Подбираем личного ассистента под вашу задачу. Берём на себя весь поиск, проверку и онбординг. Заменяем бесплатно по гарантии 60 дней.
+        </p>
+        <div class="hero__ctas reveal">
+          <button class="btn btn--primary btn--lg" onclick="scrollToCta()">
+            Разобрать мою задачу за 30 минут
+            <span class="btn__arrow">→</span>
+          </button>
+          <button class="btn btn--ghost btn--lg" onclick="openTestModal()">
+            Пройти короткий тест
+          </button>
+        </div>
+        <p class="micro reveal">Бесплатный звонок. Поймёте, какой ассистент вам подходит, даже если решите не работать с нами.</p>
+      </div>
+
+      <div class="hero__right">
+        <div class="hero__card reveal">
+          <span class="label-sm hero__card-label">Что мы делаем</span>
+          <ul class="hero__list">
+            <li>
+              <span class="hero__list-num">01</span>
+              <span>Подбираем 3 финалистов из 50 кандидатов с проверенными навыками, надёжностью и типом мышления</span>
+            </li>
+            <li>
+              <span class="hero__list-num">02</span>
+              <span>Проводим тестовые задания и интервью — вы встречаетесь только с сильными</span>
+            </li>
+            <li>
+              <span class="hero__list-num">03</span>
+              <span>Вводим нового человека в ваши процессы, и он закрывает первые задачи на первой неделе</span>
+            </li>
+            <li>
+              <span class="hero__list-num">04</span>
+              <span>Включаем гарантию замены 60 дней: если что-то пойдёт не так, ищем нового за наш счёт</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero__deco" aria-hidden="true"></div>
+</section>
+
+<!-- ─────────── TRUST STRIP ─────────── -->
+<div class="trust-strip">
+  <div class="container">
+    <div class="trust-strip__inner">
+      <div class="trust-strip__item">
+        <div class="trust-strip__value">14 дней</div>
+        <div class="trust-strip__label">от заявки до выхода ассистента</div>
+      </div>
+      <div class="trust-strip__item">
+        <div class="trust-strip__value">3 финалиста</div>
+        <div class="trust-strip__label">из 50 проверенных кандидатов</div>
+      </div>
+      <div class="trust-strip__item">
+        <div class="trust-strip__value">60 дней</div>
+        <div class="trust-strip__label">гарантия замены в базовом тарифе</div>
+      </div>
+      <div class="trust-strip__item">
+        <div class="trust-strip__value">1-й неделе</div>
+        <div class="trust-strip__label">ассистент закрывает первые задачи</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────── TEST TEASER ─────────── -->
+<section class="section teaser">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-header__kicker">
+        <span class="label-sm" style="color: var(--secondary);">— Перед звонком</span>
+      </div>
+      <h2 class="display-md">Примерьте match на свой бизнес <span class="accent">за 2 минуты</span></h2>
+    </div>
+
+    <div class="teaser__card reveal">
+      <div>
+        <h3 class="teaser__title headline-lg">Тест за 2 минуты</h3>
+        <p class="teaser__desc">7 коротких вопросов о вашей ситуации. На выходе — персональный портрет ассистента: формат, ключевые навыки, срок подбора и вилка бюджета.</p>
+      </div>
+      <button class="btn btn--secondary btn--lg" onclick="openTestModal()">
+        Пройти тест
+        <span class="btn__arrow">→</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── BENEFITS ─────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-header__kicker">
+        <span class="label-sm" style="color: var(--secondary);">— Результат</span>
+      </div>
+      <h2 class="display-md">Что вы получите <span class="accent">с нашим продуктом</span></h2>
+    </div>
+
+    <div class="benefits">
+      <div class="benefit reveal">
+        <div class="benefit__icon">I</div>
+        <h3 class="benefit__title">15–25 свободных часов в неделю</h3>
+        <p class="benefit__desc">Освобождаете время от рутины. Часы возвращаются к вам — на стратегию, семью и отдых.</p>
+      </div>
+      <div class="benefit reveal">
+        <div class="benefit__icon">II</div>
+        <h3 class="benefit__title">Контроль над календарём</h3>
+        <p class="benefit__desc">Возвращаете управление расписанием и можете заниматься стратегией, а не пожарами.</p>
+      </div>
+      <div class="benefit reveal">
+        <div class="benefit__icon">III</div>
+        <h3 class="benefit__title">Подбор, проверка и онбординг — на нас</h3>
+        <p class="benefit__desc">Команда match закрывает весь процесс. Ваш ресурс на это тратить не нужно.</p>
+      </div>
+      <div class="benefit reveal">
+        <div class="benefit__icon">IV</div>
+        <h3 class="benefit__title">Гарантия замены 60 дней</h3>
+        <p class="benefit__desc">Один уход не отбрасывает вас на старт — ищем нового ассистента за наш счёт.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── RECOGNIZE ─────────── -->
+<section class="section recognize">
+  <div class="container">
+    <div class="section-header reveal" style="margin-bottom: 48px;">
+      <div class="section-header__kicker">
+        <span class="label-sm" style="color: var(--secondary);">— Узнаёте себя?</span>
+      </div>
+    </div>
+
+    <div class="recognize__grid">
+      <div class="recognize__col-left reveal">
+        <h2 class="display-md recognize__claim">
+          Вы хотите перестать <br>
+          делать всё самому <br>
+          и вернуть себе время на <span class="accent">стратегию, семью и отдых</span>?
+        </h2>
+        <p class="body-lg">Хотя бы одна из ситуаций справа про вас. Каждая приводит к одному ощущению — что вы тянете всё на себе и теряете контроль над временем.</p>
+
+        <div class="emotions-wrap" style="margin-top: 32px;">
+          <span class="recognize__sublabel">Что вы чувствуете прямо сейчас</span>
+          <ul class="emotions">
+            <li>Раздражение, что снова придётся проходить весь круг найма</li>
+            <li>Тревогу, что повторите прошлую ошибку и опять потеряете 2–3 месяца</li>
+            <li>Усталость от того, что всё держится лично на вас</li>
+            <li>Стыд, что сами довели себя до 12-часового рабочего дня</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="recognize__col-right reveal">
+        <span class="recognize__sublabel">Ситуации</span>
+        <ul class="situations">
+          <li>Уже пробовали нанять ассистента сами. Кандидат ушёл через месяц или не подошёл, и вы остались с открытой вакансией и потерянным временем</li>
+          <li>Бизнес вырос, и теперь любой вопрос команды и клиентов летит лично вам. Вы стали бутылочным горлышком</li>
+          <li>Случилось важное событие: новый проект, ребёнок, переезд. Времени резко стало не хватать, и решение нужно сейчас</li>
+          <li>Работаете по 12 часов, не помните, когда был последний выходной. Понимаете: ещё немного, и сломаетесь</li>
+        </ul>
+        <p class="recognize__closer">Узнали себя? — Читайте дальше</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── PROCESS / STEPS ─────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-header__kicker">
+        <span class="label-sm" style="color: var(--secondary);">— Как мы решаем</span>
+      </div>
+      <h2 class="display-md">Как вы решите свою задачу <span class="accent">с нашим продуктом</span></h2>
+    </div>
+
+    <div class="process__lead reveal">
+      Ваша задача — <strong>найти нормального ассистента</strong>, который реально работает, и ввести его в работу так, чтобы польза была с первой недели.
+    </div>
+
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step__num">01</div>
+        <div class="step__body">
+          <h3 class="step__title">Разбор вашей задачи за 30 минут</h3>
+          <p class="step__desc">Вы получаете чёткий портрет ассистента: какие задачи закроет, какой характер подойдёт, сколько времени и денег это сэкономит.</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step__num">02</div>
+        <div class="step__body">
+          <h3 class="step__title">Подбор и проверка кандидатов</h3>
+          <p class="step__desc">Из 50 откликов оставляем 3 финалистов с проверенными навыками, надёжностью и типом мышления. Вы экономите время на чтении резюме и провальных интервью.</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step__num">03</div>
+        <div class="step__body">
+          <h3 class="step__title">Финальное интервью с вами</h3>
+          <p class="step__desc">Встречаетесь сразу с сильнейшими и выбираете уверенно, без сомнений «а вдруг опять ошибусь».</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step__num">04</div>
+        <div class="step__body">
+          <h3 class="step__title">Онбординг внутри</h3>
+          <p class="step__desc">Ассистент входит в ваши процессы и закрывает первые задачи на первой неделе. Окупаемость начинается сразу.</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step__num">05</div>
+        <div class="step__body">
+          <h3 class="step__title">Сопровождение первого месяца</h3>
+          <p class="step__desc">Если что-то идёт не так, помогаем настроить общение, обратную связь и приоритеты. Вы не остаётесь один на один с новым человеком.</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step__num">06</div>
+        <div class="step__body">
+          <h3 class="step__title">Гарантия замены 60 дней</h3>
+          <p class="step__desc">Если ассистент уходит или не подходит, ищем нового за наш счёт. План Б уже включён в услугу.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── OUTCOME ─────────── -->
+<section class="section outcome">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-header__kicker">
+        <span class="label-sm">— К чему вы придёте</span>
+      </div>
+      <h2 class="display-md">Через 14 дней у вас есть <span style="color: var(--secondary-warm);">ассистент, который работает</span>. <br>Через месяц вы почувствуете —</h2>
+    </div>
+
+    <div class="outcome__grid">
+      <div class="outcome__feel reveal">
+        <div class="outcome__feel-card">
+          <div class="outcome__feel-icon">Лёгкость</div>
+          <p class="outcome__feel-desc">Операционка слезла с вас. Вы делаете то, ради чего открывали свой бизнес.</p>
+        </div>
+        <div class="outcome__feel-card">
+          <div class="outcome__feel-icon">Уверенность</div>
+          <p class="outcome__feel-desc">Знаете, что есть план Б. Один уход ассистента не отбрасывает на старт.</p>
+        </div>
+        <div class="outcome__feel-card">
+          <div class="outcome__feel-icon">Спокойствие</div>
+          <p class="outcome__feel-desc">Сто мелочей в голове теперь держит ассистент, а не вы.</p>
+        </div>
+        <div class="outcome__feel-card">
+          <div class="outcome__feel-icon">Гордость</div>
+          <p class="outcome__feel-desc">Вы наконец сделали то, что давно собирались, и сделали по-человечески.</p>
+        </div>
+      </div>
+
+      <div class="outcome__caps reveal">
+        <h3>И сможете</h3>
+        <ul>
+          <li>Заниматься стратегией и ростом бизнеса, а не тушить ежедневные пожары</li>
+          <li>Возвращать себе вечера, выходные и отпуск без вины перед бизнесом</li>
+          <li>Расти как предприниматель и сохранять при этом себя</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── PROOF ─────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-header__kicker">
+        <span class="label-sm" style="color: var(--secondary);">— Соцдоказательство</span>
+      </div>
+      <h2 class="display-md">Кто уже <span class="accent">работает с match</span></h2>
+    </div>
+
+    <div class="proof__metrics reveal">
+      <div class="metric">
+        <div class="metric__value">—</div>
+        <div class="metric__label">Подобрали ассистентов для&nbsp;X&nbsp;предпринимателей</div>
+      </div>
+      <div class="metric">
+        <div class="metric__value">—<span class="unit">%</span></div>
+        <div class="metric__label">Продолжают работать после 6 месяцев</div>
+      </div>
+      <div class="metric">
+        <div class="metric__value">—</div>
+        <div class="metric__label">Средний срок подбора, дней</div>
+      </div>
+      <div class="metric">
+        <div class="metric__value">—</div>
+        <div class="metric__label">Задач, которые забирает ассистент в первый месяц</div>
+      </div>
+    </div>
+
+    <div class="cases">
+      <article class="case reveal">
+        <div class="case__tag-row">
+          <span class="chip">Первый провал</span>
+          <span class="chip chip--navy">Подбор за 5 дней</span>
+        </div>
+        <p class="case__quote">«Через 5 дней вышла ассистент. Работает 7 месяцев. У меня теперь 3 свободных вечера в неделю и руки на новый проект.»</p>
+        <div class="case__author">
+          <div class="case__avatar">М</div>
+          <div class="case__author-info">
+            <span class="case__name">Михаил</span>
+            <span class="case__role">Владелец логистической компании · 23 сотрудника</span>
+          </div>
+        </div>
+        <div class="case__result">↗ 18 свободных часов в неделю · запущено новое направление</div>
+      </article>
+
+      <article class="case reveal">
+        <div class="case__tag-row">
+          <span class="chip">Рост бизнеса</span>
+          <span class="chip chip--navy">Сняли входящий поток</span>
+        </div>
+        <p class="case__quote">«До match я была бутылочным горлышком — 40 человек команды и все вопросы ко мне. Сейчас половина задач уходит ассистенту, я наконец занимаюсь стратегией.»</p>
+        <div class="case__author">
+          <div class="case__avatar">А</div>
+          <div class="case__author-info">
+            <span class="case__name">Анна</span>
+            <span class="case__role">Соосновательница сети студий · 46 сотрудников</span>
+          </div>
+        </div>
+        <div class="case__result">↗ возвращены 4 рабочих дня в неделю на стратегию</div>
+      </article>
+
+      <article class="case reveal">
+        <div class="case__tag-row">
+          <span class="chip">Жизненный триггер</span>
+          <span class="chip chip--navy">Подбор за 7 дней</span>
+        </div>
+        <p class="case__quote">«Открывал новое направление, времени не было совсем. match закрыл подбор за неделю — ассистент с первого дня взял на себя координацию и операционку запуска.»</p>
+        <div class="case__author">
+          <div class="case__avatar">А</div>
+          <div class="case__author-info">
+            <span class="case__name">Артём</span>
+            <span class="case__role">Сооснователь e-commerce · 12 сотрудников</span>
+          </div>
+        </div>
+        <div class="case__result">↗ запуск нового направления без потери основного</div>
+      </article>
+
+      <article class="case reveal">
+        <div class="case__tag-row">
+          <span class="chip">Выгорание</span>
+          <span class="chip chip--navy">Сопровождение 1 месяца</span>
+        </div>
+        <p class="case__quote">«Я работал по 14 часов и понимал — ещё немного и сломаюсь. Через match нашли ассистентку, которая через месяц забрала с меня все мелочи. Снова чувствую себя живым.»</p>
+        <div class="case__author">
+          <div class="case__avatar">Д</div>
+          <div class="case__author-info">
+            <span class="case__name">Дмитрий</span>
+            <span class="case__role">Основатель консалтингового бюро · 18 сотрудников</span>
+          </div>
+        </div>
+        <div class="case__result">↗ вернулись выходные и нормальный сон</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── DOUBTS ─────────── -->
+<section class="section doubts">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-header__kicker">
+        <span class="label-sm" style="color: var(--secondary);">— Возражения</span>
+      </div>
+      <h2 class="display-md">У вас есть <span class="accent">сомнения</span>?</h2>
+      <p class="body-lg" style="margin-top: 16px;">Мы слышим эти 5 вопросов чаще всего. Отвечаем честно и подробно.</p>
+    </div>
+
+    <div class="doubts__list reveal">
+      <details class="doubt">
+        <summary class="doubt__q">
+          <span class="doubt__q-text">«Опять не получится, как в прошлый раз»</span>
+          <span class="doubt__icon"></span>
+        </summary>
+        <div class="doubt__a">Поэтому мы закрываем то, на чём чаще всего падают самостоятельные наймы: формулировку роли, отбор, проверку soft skills, онбординг. И страхуем результат гарантией замены на 60 дней, чтобы шаг был безопасным.</div>
+      </details>
+
+      <details class="doubt">
+        <summary class="doubt__q">
+          <span class="doubt__q-text">«Это дорого»</span>
+          <span class="doubt__icon"></span>
+        </summary>
+        <div class="doubt__a">Одна услуга, одна цена. Без скрытых платежей за онбординг и замену. По нашим расчётам ассистент окупается за 1–2 месяца только за счёт освободившихся часов. На разборе мы покажем расчёт под ваши задачи.</div>
+      </details>
+
+      <details class="doubt">
+        <summary class="doubt__q">
+          <span class="doubt__q-text">«У меня нет времени на онбординг»</span>
+          <span class="doubt__icon"></span>
+        </summary>
+        <div class="doubt__a">Онбординг ведём мы. От вас потребуется только сформулировать запрос на разборе и принять результат. Дальше ассистент работает с вашими процессами под нашим сопровождением первого месяца.</div>
+      </details>
+
+      <details class="doubt">
+        <summary class="doubt__q">
+          <span class="doubt__q-text">«А вдруг ассистент уйдёт через месяц»</span>
+          <span class="doubt__icon"></span>
+        </summary>
+        <div class="doubt__a">Гарантия замены 60 дней входит в услугу. Если уход случится, ищем нового за наш счёт. Вам не нужно начинать заново.</div>
+      </details>
+
+      <details class="doubt">
+        <summary class="doubt__q">
+          <span class="doubt__q-text">«У меня очень специфический бизнес, никто не подойдёт»</span>
+          <span class="doubt__icon"></span>
+        </summary>
+        <div class="doubt__a">Разбор за 30 минут как раз отвечает на этот вопрос. Если поймём, что не сможем закрыть вашу задачу — скажем честно. Лучше расстаться на разборе, чем подобрать «лишь бы кого».</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── COMPARE ─────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-header__kicker">
+        <span class="label-sm" style="color: var(--secondary);">— Сравнение</span>
+      </div>
+      <h2 class="display-md">Сравните match <span class="accent">с другими способами найма</span></h2>
+    </div>
+
+    <div class="compare__table reveal">
+      <div class="compare__row compare__row--head">
+        <div class="compare__cell compare__cell--head">Что важно</div>
+        <div class="compare__cell compare__cell--head">hh.ru / Авито</div>
+        <div class="compare__cell compare__cell--head">Кадровое&nbsp;агентство</div>
+        <div class="compare__cell compare__cell--head ours">match</div>
+      </div>
+
+      <div class="compare__row">
+        <div class="compare__cell compare__cell--label">Поиск кандидатов</div>
+        <div class="compare__cell" data-label="hh.ru / Авито">Сами ищете, читаете 50 откликов, фильтруете</div>
+        <div class="compare__cell" data-label="Кадровое агентство">Закрывают вакансию и пропадают</div>
+        <div class="compare__cell compare__cell--ours" data-label="match">Берём на себя весь поиск. Вы видите 3 финалистов</div>
+      </div>
+
+      <div class="compare__row">
+        <div class="compare__cell compare__cell--label">Проверка кандидатов</div>
+        <div class="compare__cell" data-label="hh.ru / Авито">Нет проверки soft skills</div>
+        <div class="compare__cell" data-label="Кадровое агентство">Поверхностная оценка</div>
+        <div class="compare__cell compare__cell--ours" data-label="match">Глубокая проверка: надёжность, тип мышления, навыки, тестовые задания</div>
+      </div>
+
+      <div class="compare__row">
+        <div class="compare__cell compare__cell--label">Онбординг</div>
+        <div class="compare__cell" data-label="hh.ru / Авито">Ваша проблема</div>
+        <div class="compare__cell" data-label="Кадровое агентство">Ваша проблема</div>
+        <div class="compare__cell compare__cell--ours" data-label="match">Вводим ассистента в вашу работу. Сопровождаем первый месяц</div>
+      </div>
+
+      <div class="compare__row">
+        <div class="compare__cell compare__cell--label">Если ассистент ушёл</div>
+        <div class="compare__cell" data-label="hh.ru / Авито">Начинаете заново</div>
+        <div class="compare__cell" data-label="Кадровое агентство">Платите снова</div>
+        <div class="compare__cell compare__cell--ours" data-label="match">Гарантия замены 60 дней включена</div>
+      </div>
+
+      <div class="compare__row">
+        <div class="compare__cell compare__cell--label">Срок</div>
+        <div class="compare__cell" data-label="hh.ru / Авито">2–3 месяца, без гарантии результата</div>
+        <div class="compare__cell" data-label="Кадровое агентство">Месяц–полтора</div>
+        <div class="compare__cell compare__cell--ours" data-label="match">14 дней под ключ</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── FINAL CTA ─────────── -->
+<section class="final-cta" id="cta">
+  <div class="container">
+    <div class="final-cta__inner reveal">
+      <span class="final-cta__kicker">— Финальный шаг</span>
+      <h2 class="final-cta__title">Готовы <span class="accent">перестать делать всё самому?</span></h2>
+      <p class="final-cta__lede">30 минут на разбор. Вы уходите с портретом своего ассистента, оценкой бюджета и сроков. Без обязательств.</p>
+      <button class="btn btn--primary btn--lg" onclick="openTestModal()">
+        Разобрать мою задачу за 30 минут
+        <span class="btn__arrow">→</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── FOOTER ─────────── -->
+<footer>
+  <div class="container">
+    <div class="footer__inner">
+      <div>
+        <a href="#" class="logo">
+          <svg class="logo__icon" aria-hidden="true"><use href="#logo-mark"/></svg>
+          <span class="logo__text">
+            <span class="logo__name">match</span>
+            <span class="logo__tag">Подбор ассистентов</span>
+          </span>
+        </a>
+        <div class="footer__copy">© 2026 match · Сервис подбора личных ассистентов под ключ</div>
+      </div>
+      <div class="footer__links">
+        <a href="#">Политика конфиденциальности</a>
+        <a href="#">Контакты</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ─────────── TEST MODAL ─────────── -->
+<div class="modal" id="testModal" aria-hidden="true">
+  <div class="modal__dialog" role="dialog" aria-modal="true">
+    <button class="modal__close" onclick="closeTestModal()" aria-label="Закрыть">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+
+    <div class="modal__progress" id="progress"></div>
+
+    <div id="stepsContainer"></div>
+
+    <div class="modal__nav" id="modalNav">
+      <button class="modal__back" id="modalBack" onclick="prevStep()">← Назад</button>
+      <button class="modal__next" id="modalNext" onclick="nextStep()" disabled>Дальше →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Reveal animations
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    el.style.transitionDelay = (i % 4) * 70 + 'ms';
+    io.observe(el);
+  });
+
+  function scrollToCta() {
+    document.getElementById('cta').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Test data
+  const questions = [
+    {
+      eyebrow: 'Вопрос 1 из 7',
+      q: 'Какой у вас сейчас бизнес?',
+      options: [
+        'Один, без команды (или 1–2 человека)',
+        'Небольшая команда, до 10 человек',
+        'Средняя команда, 10–30 человек',
+        'Большая команда, 30+ человек'
+      ]
+    },
+    {
+      eyebrow: 'Вопрос 2 из 7',
+      q: 'Сколько часов в неделю у вас уходит на операционку — мелкие задачи, координация, чаты, рутина?',
+      options: ['До 5 часов', '5–15 часов', '15–25 часов', 'Больше 25 часов']
+    },
+    {
+      eyebrow: 'Вопрос 3 из 7',
+      q: 'Пробовали ли вы уже работать с ассистентом?',
+      options: [
+        'Ещё не пробовал',
+        'Пробовал, не получилось: ушёл или не подошёл',
+        'Сейчас работаю, но что-то идёт не так',
+        'Работал давно, сейчас снова в поиске'
+      ]
+    },
+    {
+      eyebrow: 'Вопрос 4 из 7',
+      q: 'Что стало триггером искать ассистента именно сейчас?',
+      options: [
+        'Прошлый раз не сработало, хочу попробовать иначе',
+        'Бизнес вырос, и я в нём стал бутылочным горлышком',
+        'Произошло важное событие, времени резко не хватает',
+        'Работаю по 12+ часов и понимаю, что так дальше нельзя',
+        'Просто хочу попробовать делегировать'
+      ]
+    },
+    {
+      eyebrow: 'Вопрос 5 из 7',
+      q: 'Какие задачи вы хотите передать в первую очередь?',
+      options: [
+        'Календарь и встречи',
+        'Почта, мессенджеры, фильтрация коммуникаций',
+        'Координация команды и подрядчиков',
+        'Документы, отчёты, рутинная аналитика',
+        'Закупки, оплаты, бытовые поручения',
+        'Личные задачи: семья, поездки, врачи, услуги',
+        'Многое сразу, ещё не знаю с чего начать'
+      ]
+    },
+    {
+      eyebrow: 'Вопрос 6 из 7',
+      q: 'Какой результат в первый месяц для вас самый важный?',
+      options: [
+        'Освободить хотя бы 10 часов в неделю',
+        'Снять с меня входящий поток вопросов от команды и клиентов',
+        'Получить надёжного человека, который останется надолго',
+        'Запуститься быстро, в течение 1–2 недель',
+        'Просто перестать делать всё самому'
+      ]
+    },
+    {
+      eyebrow: 'Вопрос 7 из 7',
+      q: 'Что вас сейчас больше всего тормозит?',
+      options: [
+        'Боюсь снова потерять время и деньги',
+        'Не понимаю, что именно делегировать и как',
+        'Боюсь, что человек уйдёт через месяц',
+        'Нет времени на интервью и онбординг',
+        'Ничего особо не тормозит, хочу просто разобраться'
+      ]
+    }
+  ];
+
+  let currentStep = 0;
+  const answers = {};
+  const totalSteps = questions.length + 1 + 1;
+
+  function renderProgress() {
+    const progressEl = document.getElementById('progress');
+    progressEl.innerHTML = '';
+    for (let i = 0; i < totalSteps - 1; i++) {
+      const seg = document.createElement('span');
+      if (i <= currentStep) seg.classList.add('done');
+      progressEl.appendChild(seg);
+    }
+  }
+
+  function renderSteps() {
+    const container = document.getElementById('stepsContainer');
+    container.innerHTML = '';
+
+    questions.forEach((q, qi) => {
+      const step = document.createElement('div');
+      step.className = 'modal__step';
+      step.dataset.index = qi;
+      step.innerHTML = `
+        <div class="modal__eyebrow">${q.eyebrow}</div>
+        <div class="modal__q">${q.q}</div>
+        <div class="modal__options">
+          ${q.options.map((opt, oi) => `
+            <label class="modal__option" data-qi="${qi}" data-oi="${oi}">
+              <input type="radio" name="q${qi}" value="${oi}" />
+              <span>${opt}</span>
+            </label>
+          `).join('')}
+        </div>
+      `;
+      container.appendChild(step);
+    });
+
+    const formStep = document.createElement('div');
+    formStep.className = 'modal__step';
+    formStep.dataset.index = questions.length;
+    formStep.innerHTML = `
+      <div class="modal__eyebrow">Финальный шаг</div>
+      <div class="modal__q">Куда прислать ваш портрет ассистента?</div>
+      <div class="modal__form">
+        <input type="text" id="f-name" placeholder="Как к вам обращаться" />
+        <input type="email" id="f-email" placeholder="Email" />
+        <input type="tel" id="f-tel" placeholder="Телефон или @username в Telegram" />
+        <label class="modal__checkbox">
+          <input type="checkbox" id="f-consent" />
+          <span>Согласен на обработку персональных данных в соответствии с политикой конфиденциальности</span>
+        </label>
+      </div>
+    `;
+    container.appendChild(formStep);
+
+    const successStep = document.createElement('div');
+    successStep.className = 'modal__step';
+    successStep.dataset.index = questions.length + 1;
+    successStep.innerHTML = `
+      <div class="modal__success">
+        <div class="modal__success-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <h3>Готово. Портрет ассистента уже у нас</h3>
+        <p>Мы свяжемся с вами в течение рабочего дня — пришлём персональный портрет и предложим время для 30-минутного разбора.</p>
+      </div>
+    `;
+    container.appendChild(successStep);
+
+    container.querySelectorAll('.modal__option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const qi = +opt.dataset.qi;
+        const oi = +opt.dataset.oi;
+        answers['q' + qi] = oi;
+        const peers = container.querySelectorAll(`[data-qi="${qi}"]`);
+        peers.forEach(p => p.classList.remove('selected'));
+        opt.classList.add('selected');
+        opt.querySelector('input').checked = true;
+        document.getElementById('modalNext').disabled = false;
+      });
+    });
+
+    ['f-name','f-email','f-tel','f-consent'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', validateForm);
+        el.addEventListener('change', validateForm);
+      }
+    });
+  }
+
+  function validateForm() {
+    const name = document.getElementById('f-name')?.value.trim();
+    const email = document.getElementById('f-email')?.value.trim();
+    const tel = document.getElementById('f-tel')?.value.trim();
+    const consent = document.getElementById('f-consent')?.checked;
+    const next = document.getElementById('modalNext');
+    if (currentStep === questions.length) {
+      next.disabled = !(name && email && tel && consent);
+    }
+  }
+
+  function showStep(index) {
+    document.querySelectorAll('.modal__step').forEach(s => s.classList.remove('active'));
+    const step = document.querySelector(`.modal__step[data-index="${index}"]`);
+    if (step) step.classList.add('active');
+
+    const back = document.getElementById('modalBack');
+    const next = document.getElementById('modalNext');
+    const modalNav = document.getElementById('modalNav');
+
+    back.style.visibility = (index === 0 || index === totalSteps - 1) ? 'hidden' : 'visible';
+
+    if (index === questions.length) {
+      next.textContent = 'Отправить';
+      modalNav.style.display = 'flex';
+      validateForm();
+    } else if (index === totalSteps - 1) {
+      modalNav.style.display = 'none';
+    } else {
+      next.textContent = 'Дальше →';
+      modalNav.style.display = 'flex';
+      next.disabled = !(answers['q' + index] !== undefined);
+    }
+    renderProgress();
+  }
+
+  function nextStep() {
+    if (currentStep < totalSteps - 1) {
+      currentStep++;
+      showStep(currentStep);
+    }
+  }
+  function prevStep() {
+    if (currentStep > 0) {
+      currentStep--;
+      showStep(currentStep);
+    }
+  }
+  function openTestModal() {
+    const modal = document.getElementById('testModal');
+    modal.classList.add('open');
+    document.body.classList.add('lock');
+    currentStep = 0;
+    Object.keys(answers).forEach(k => delete answers[k]);
+    renderSteps();
+    showStep(0);
+  }
+  function closeTestModal() {
+    document.getElementById('testModal').classList.remove('open');
+    document.body.classList.remove('lock');
+  }
+  document.getElementById('testModal').addEventListener('click', (e) => {
+    if (e.target.id === 'testModal') closeTestModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeTestModal();
+  });
+</script>
+
+</body>
+</html>
