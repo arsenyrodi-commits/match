@@ -318,6 +318,17 @@
   .hero__lede { max-width: 540px; margin-bottom: 36px; }
   .hero__ctas { display: flex; gap: 12px; flex-wrap: wrap; }
 
+  .hero__img {
+    width: 100%;
+    height: auto;
+    display: block;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  @media (max-width: 980px) {
+    .hero__img { max-width: 400px; }
+  }
+
   .hero__card {
     background: var(--container-lowest);
     border-radius: var(--radius-lg);
@@ -1288,27 +1299,7 @@
       </div>
 
       <div class="hero__right">
-        <div class="hero__card reveal">
-          <span class="label-sm hero__card-label">Что мы делаем</span>
-          <ul class="hero__list">
-            <li>
-              <span class="hero__list-num">01</span>
-              <span>Подбираем 3 финалистов из 50 кандидатов с проверенными навыками, надёжностью и типом мышления</span>
-            </li>
-            <li>
-              <span class="hero__list-num">02</span>
-              <span>Проводим тестовые задания и интервью — вы встречаетесь только с сильными</span>
-            </li>
-            <li>
-              <span class="hero__list-num">03</span>
-              <span>Вводим нового человека в ваши процессы, и он закрывает первые задачи на первой неделе</span>
-            </li>
-            <li>
-              <span class="hero__list-num">04</span>
-              <span>Включаем гарантию замены 60 дней: если что-то пойдёт не так, ищем нового за наш счёт</span>
-            </li>
-          </ul>
-        </div>
+        <img class="hero__img reveal" src="hero1.png" alt="Предприниматель за столом и ассистент, забирающий операционные задачи" />
       </div>
     </div>
   </div>
