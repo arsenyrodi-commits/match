@@ -126,33 +126,17 @@
   .logo {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
     text-decoration: none;
     color: var(--on-surface);
   }
   .logo__icon {
-    width: 36px;
-    height: 36px;
+    height: 56px;
+    width: auto;
+    display: block;
     flex-shrink: 0;
   }
-  .logo__text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1;
-  }
-  .logo__name {
-    font-size: 22px;
-    font-weight: 300;
-    letter-spacing: -0.02em;
-    color: var(--primary-container);
-  }
-  .logo__tag {
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--secondary);
-    margin-top: 4px;
+  @media (max-width: 720px) {
+    .logo__icon { height: 48px; }
   }
 
   /* ─────────── NAV ─────────── */
@@ -1264,48 +1248,14 @@
 </head>
 <body>
 
-<!-- ─────────── LOGO SVG (template) ─────────── -->
-<svg width="0" height="0" style="position: absolute;" aria-hidden="true">
-  <defs>
-    <symbol id="logo-mark" viewBox="0 0 120 120">
-      <!-- Left person (navy) -->
-      <circle cx="34" cy="22" r="14" fill="#1b2430"/>
-      <path d="M 18,44
-               L 50,44
-               L 50,78
-               Q 60,84 60,96
-               L 50,96
-               L 50,112
-               L 18,112
-               Z"
-            fill="#1b2430"/>
-      <!-- Right person (sand) -->
-      <circle cx="86" cy="22" r="14" fill="#6a5c4b"/>
-      <path d="M 102,44
-               L 70,44
-               L 70,96
-               L 60,96
-               Q 60,84 70,78
-               L 70,112
-               L 102,112
-               Z"
-            fill="#6a5c4b"/>
-    </symbol>
-  </defs>
-</svg>
-
 <!-- ─────────── NAV ─────────── -->
 <nav class="nav" id="nav">
   <div class="nav__inner">
     <a href="#" class="logo" aria-label="match — Подбор ассистентов">
-      <svg class="logo__icon" aria-hidden="true"><use href="#logo-mark"/></svg>
-      <span class="logo__text">
-        <span class="logo__name">match</span>
-        <span class="logo__tag">Подбор ассистентов</span>
-      </span>
+      <img class="logo__icon" src="logo1.png" alt="match — подбор ассистентов" />
     </a>
     <div class="nav__meta">Личный ассистент под ключ за 14 дней</div>
-    <button class="btn btn--primary" onclick="scrollToCta()">
+    <button class="btn btn--primary" onclick="openLeadModal()">
       Записаться на разбор
       <span class="btn__arrow">→</span>
     </button>
@@ -1329,12 +1279,9 @@
           Подбираем личного ассистента под вашу задачу. Берём на себя весь поиск, проверку и онбординг. Заменяем бесплатно по гарантии 60 дней.
         </p>
         <div class="hero__ctas reveal">
-          <button class="btn btn--primary btn--lg" onclick="scrollToCta()">
+          <button class="btn btn--primary btn--lg" onclick="openTestModal()">
             Разобрать мою задачу за 30 минут
             <span class="btn__arrow">→</span>
-          </button>
-          <button class="btn btn--ghost btn--lg" onclick="openTestModal()">
-            Пройти короткий тест
           </button>
         </div>
         <p class="micro reveal">Бесплатный звонок. Поймёте, какой ассистент вам подходит, даже если решите не работать с нами.</p>
@@ -1824,12 +1771,8 @@
   <div class="container">
     <div class="footer__inner">
       <div>
-        <a href="#" class="logo">
-          <svg class="logo__icon" aria-hidden="true"><use href="#logo-mark"/></svg>
-          <span class="logo__text">
-            <span class="logo__name">match</span>
-            <span class="logo__tag">Подбор ассистентов</span>
-          </span>
+        <a href="#" class="logo" aria-label="match">
+          <img class="logo__icon" src="logo1.png" alt="match — подбор ассистентов" />
         </a>
         <div class="footer__copy">© 2026 match · Сервис подбора личных ассистентов под ключ</div>
       </div>
@@ -1860,6 +1803,55 @@
 </div>
 
 <script>
+  // ─────────── TELEGRAM ───────────
+  // Заявки идут через Cloudflare Worker — токен бота хранится там как секрет,
+  // в исходниках страницы его нет.
+  const TELEGRAM_PROXY_URL = 'https://match-telegram-proxy.arseny-rodi.workers.dev/';
+
+  const formData = { name: '', tel: '' };
+
+  function captureForm() {
+    formData.name = document.getElementById('f-name')?.value.trim() || '';
+    formData.tel = document.getElementById('f-tel')?.value.trim() || '';
+  }
+
+  function buildTelegramMessage() {
+    const lines = [];
+    const isLead = modalMode === 'lead';
+    lines.push(isLead ? '🆕 Заявка на разбор (без теста)' : '🆕 Заявка + пройден тест');
+    lines.push('');
+    lines.push('👤 Имя: ' + (formData.name || '—'));
+    lines.push('📞 Контакт: ' + (formData.tel || '—'));
+    lines.push('🌐 Источник: ' + (document.referrer || 'прямой заход'));
+    if (!isLead) {
+      lines.push('');
+      lines.push('🧩 Ответы теста:');
+      questions.forEach((q, qi) => {
+        const oi = answers['q' + qi];
+        if (oi !== undefined) {
+          lines.push((qi + 1) + '. ' + q.q);
+          lines.push('   → ' + q.options[oi]);
+        }
+      });
+    }
+    return lines.join('\n');
+  }
+
+  async function sendToTelegram() {
+    try {
+      const res = await fetch(TELEGRAM_PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: buildTelegramMessage() })
+      });
+      if (!res.ok) {
+        console.error('Telegram proxy failed', res.status, await res.text());
+      }
+    } catch (e) {
+      console.error('Telegram proxy error', e);
+    }
+  }
+
   // Nav scroll
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => {
@@ -1879,10 +1871,6 @@
     el.style.transitionDelay = (i % 4) * 70 + 'ms';
     io.observe(el);
   });
-
-  function scrollToCta() {
-    document.getElementById('cta').scrollIntoView({ behavior: 'smooth' });
-  }
 
   // Test data
   const questions = [
@@ -1959,14 +1947,22 @@
     }
   ];
 
+  // 'lead' = только форма заявки (имя + телефон) → success
+  // 'test' = форма заявки → 7 вопросов теста → success
+  let modalMode = 'test';
   let currentStep = 0;
   const answers = {};
-  const totalSteps = questions.length + 1 + 1;
+
+  function totalSteps() {
+    // form (1) + questions (опционально) + success (1)
+    return modalMode === 'lead' ? 2 : questions.length + 2;
+  }
 
   function renderProgress() {
     const progressEl = document.getElementById('progress');
     progressEl.innerHTML = '';
-    for (let i = 0; i < totalSteps - 1; i++) {
+    const total = totalSteps();
+    for (let i = 0; i < total - 1; i++) {
       const seg = document.createElement('span');
       if (i <= currentStep) seg.classList.add('done');
       progressEl.appendChild(seg);
@@ -1977,34 +1973,19 @@
     const container = document.getElementById('stepsContainer');
     container.innerHTML = '';
 
-    questions.forEach((q, qi) => {
-      const step = document.createElement('div');
-      step.className = 'modal__step';
-      step.dataset.index = qi;
-      step.innerHTML = `
-        <div class="modal__eyebrow">${q.eyebrow}</div>
-        <div class="modal__q">${q.q}</div>
-        <div class="modal__options">
-          ${q.options.map((opt, oi) => `
-            <label class="modal__option" data-qi="${qi}" data-oi="${oi}">
-              <input type="radio" name="q${qi}" value="${oi}" />
-              <span>${opt}</span>
-            </label>
-          `).join('')}
-        </div>
-      `;
-      container.appendChild(step);
-    });
-
+    // Шаг 0 — форма заявки (всегда первая)
     const formStep = document.createElement('div');
     formStep.className = 'modal__step';
-    formStep.dataset.index = questions.length;
+    formStep.dataset.index = 0;
+    const formEyebrow = modalMode === 'lead' ? 'Запись на разбор' : 'Перед тестом — пара слов о вас';
+    const formTitle = modalMode === 'lead'
+      ? 'Оставьте контакты — менеджер свяжется в течение рабочего дня'
+      : 'Оставьте контакты, и сразу откроем тест из 7 вопросов';
     formStep.innerHTML = `
-      <div class="modal__eyebrow">Финальный шаг</div>
-      <div class="modal__q">Куда прислать ваш портрет ассистента?</div>
+      <div class="modal__eyebrow">${formEyebrow}</div>
+      <div class="modal__q">${formTitle}</div>
       <div class="modal__form">
         <input type="text" id="f-name" placeholder="Как к вам обращаться" />
-        <input type="email" id="f-email" placeholder="Email" />
         <input type="tel" id="f-tel" placeholder="Телефон или @username в Telegram" />
         <label class="modal__checkbox">
           <input type="checkbox" id="f-consent" />
@@ -2014,9 +1995,36 @@
     `;
     container.appendChild(formStep);
 
+    // Шаги 1..N — вопросы теста (только в режиме 'test')
+    if (modalMode === 'test') {
+      questions.forEach((q, qi) => {
+        const step = document.createElement('div');
+        step.className = 'modal__step';
+        step.dataset.index = qi + 1;
+        step.innerHTML = `
+          <div class="modal__eyebrow">${q.eyebrow}</div>
+          <div class="modal__q">${q.q}</div>
+          <div class="modal__options">
+            ${q.options.map((opt, oi) => `
+              <label class="modal__option" data-qi="${qi}" data-oi="${oi}">
+                <input type="radio" name="q${qi}" value="${oi}" />
+                <span>${opt}</span>
+              </label>
+            `).join('')}
+          </div>
+        `;
+        container.appendChild(step);
+      });
+    }
+
+    // Последний шаг — успех
     const successStep = document.createElement('div');
     successStep.className = 'modal__step';
-    successStep.dataset.index = questions.length + 1;
+    successStep.dataset.index = totalSteps() - 1;
+    const successTitle = modalMode === 'lead' ? 'Готово. Заявка у нас' : 'Готово. Портрет ассистента уже у нас';
+    const successDesc = modalMode === 'lead'
+      ? 'Менеджер свяжется в течение рабочего дня и предложит время для 30-минутного разбора.'
+      : 'Мы свяжемся в течение рабочего дня — пришлём персональный портрет и предложим время для 30-минутного разбора.';
     successStep.innerHTML = `
       <div class="modal__success">
         <div class="modal__success-icon">
@@ -2024,8 +2032,8 @@
             <polyline points="20 6 9 17 4 12"/>
           </svg>
         </div>
-        <h3>Готово. Портрет ассистента уже у нас</h3>
-        <p>Мы свяжемся с вами в течение рабочего дня — пришлём персональный портрет и предложим время для 30-минутного разбора.</p>
+        <h3>${successTitle}</h3>
+        <p>${successDesc}</p>
       </div>
     `;
     container.appendChild(successStep);
@@ -2043,7 +2051,7 @@
       });
     });
 
-    ['f-name','f-email','f-tel','f-consent'].forEach(id => {
+    ['f-name','f-tel','f-consent'].forEach(id => {
       const el = document.getElementById(id);
       if (el) {
         el.addEventListener('input', validateForm);
@@ -2054,12 +2062,11 @@
 
   function validateForm() {
     const name = document.getElementById('f-name')?.value.trim();
-    const email = document.getElementById('f-email')?.value.trim();
     const tel = document.getElementById('f-tel')?.value.trim();
     const consent = document.getElementById('f-consent')?.checked;
     const next = document.getElementById('modalNext');
-    if (currentStep === questions.length) {
-      next.disabled = !(name && email && tel && consent);
+    if (currentStep === 0) {
+      next.disabled = !(name && tel && consent);
     }
   }
 
@@ -2071,26 +2078,42 @@
     const back = document.getElementById('modalBack');
     const next = document.getElementById('modalNext');
     const modalNav = document.getElementById('modalNav');
+    const total = totalSteps();
+    const isForm = index === 0;
+    const isSuccess = index === total - 1;
 
-    back.style.visibility = (index === 0 || index === totalSteps - 1) ? 'hidden' : 'visible';
+    back.style.visibility = (isForm || isSuccess) ? 'hidden' : 'visible';
 
-    if (index === questions.length) {
-      next.textContent = 'Отправить';
-      modalNav.style.display = 'flex';
-      validateForm();
-    } else if (index === totalSteps - 1) {
+    if (isSuccess) {
       modalNav.style.display = 'none';
-    } else {
-      next.textContent = 'Дальше →';
+    } else if (isForm) {
       modalNav.style.display = 'flex';
-      next.disabled = !(answers['q' + index] !== undefined);
+      // В lead-режиме после формы — успех (записаться).
+      // В test-режиме после формы — первый вопрос (дальше к тесту).
+      next.textContent = modalMode === 'lead' ? 'Записаться' : 'К тесту →';
+      validateForm();
+    } else {
+      modalNav.style.display = 'flex';
+      next.textContent = (index === total - 2) ? 'Завершить' : 'Дальше →';
+      // index здесь — порядковый номер вопроса начиная с 1, ответ хранится под qi = index - 1
+      next.disabled = !(answers['q' + (index - 1)] !== undefined);
     }
     renderProgress();
   }
 
   function nextStep() {
-    if (currentStep < totalSteps - 1) {
-      currentStep++;
+    if (currentStep < totalSteps() - 1) {
+      // При уходе с формы (шаг 0) — фиксируем имя/телефон в памяти
+      if (currentStep === 0) {
+        captureForm();
+      }
+      const nextIndex = currentStep + 1;
+      const goingToSuccess = nextIndex === totalSteps() - 1;
+      // Перед показом success-экрана отправляем заявку в Telegram (fire-and-forget)
+      if (goingToSuccess) {
+        sendToTelegram();
+      }
+      currentStep = nextIndex;
       showStep(currentStep);
     }
   }
@@ -2100,7 +2123,8 @@
       showStep(currentStep);
     }
   }
-  function openTestModal() {
+  function _openModal(mode) {
+    modalMode = mode;
     const modal = document.getElementById('testModal');
     modal.classList.add('open');
     document.body.classList.add('lock');
@@ -2109,6 +2133,8 @@
     renderSteps();
     showStep(0);
   }
+  function openTestModal() { _openModal('test'); }
+  function openLeadModal() { _openModal('lead'); }
   function closeTestModal() {
     document.getElementById('testModal').classList.remove('open');
     document.body.classList.remove('lock');
