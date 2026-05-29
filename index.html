@@ -329,28 +329,39 @@
     .hero__img { max-width: 400px; }
   }
 
-  .recognize__img {
-    width: 100%;
-    max-width: 340px;
-    height: auto;
-    display: block;
-    margin: 0 0 28px;
+  .recognize__top {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 56px;
+    align-items: center;
+    margin-bottom: 56px;
   }
   @media (max-width: 980px) {
-    .recognize__img { max-width: 280px; margin-left: auto; margin-right: auto; }
+    .recognize__top { grid-template-columns: 1fr; gap: 28px; margin-bottom: 40px; text-align: center; }
+    .recognize__intro { text-align: left; }
+  }
+  .recognize__img {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  @media (max-width: 980px) {
+    .recognize__img { max-width: 280px; }
   }
 
   .outcome__img {
     width: 100%;
-    max-width: 460px;
+    max-width: 360px;
     height: auto;
     display: block;
-    margin: 0 auto 64px;
+    margin: 0 auto 48px;
     position: relative;
     z-index: 1;
   }
   @media (max-width: 720px) {
-    .outcome__img { max-width: 320px; margin-bottom: 40px; }
+    .outcome__img { max-width: 280px; margin-bottom: 32px; }
   }
 
   .hero__card {
@@ -1421,36 +1432,38 @@
       </div>
     </div>
 
+    <div class="recognize__top">
+      <img class="recognize__img reveal" src="pain1.png" alt="Предприниматель, заваленный операционной рутиной" />
+      <div class="recognize__intro reveal">
+        <h2 class="display-md recognize__claim">
+          Вы хотите перестать делать всё самому и вернуть себе время на <span class="accent">стратегию, семью и отдых</span>?
+        </h2>
+        <p class="body-lg">Хотя бы одна из ситуаций ниже про вас. Каждая приводит к одному ощущению — что вы тянете всё на себе и теряете контроль над временем.</p>
+      </div>
+    </div>
+
     <div class="recognize__grid">
       <div class="recognize__col-left reveal">
-        <img class="recognize__img" src="pain1.png" alt="Предприниматель, заваленный операционной рутиной" />
-        <h2 class="display-md recognize__claim">
-          Вы хотите перестать <br>
-          делать всё самому <br>
-          и вернуть себе время на <span class="accent">стратегию, семью и отдых</span>?
-        </h2>
-        <p class="body-lg">Хотя бы одна из ситуаций справа про вас. Каждая приводит к одному ощущению — что вы тянете всё на себе и теряете контроль над временем.</p>
+        <span class="recognize__sublabel">Ситуации</span>
+        <ul class="situations">
+          <li>Уже пробовали нанять ассистента сами. Кандидат ушёл через месяц или не подошёл — остались с открытой вакансией и потерянным временем</li>
+          <li>Бизнес вырос, любой вопрос команды и клиентов летит лично вам. Вы стали бутылочным горлышком</li>
+          <li>Случилось важное событие: новый проект, ребёнок, переезд. Времени резко не хватает, решение нужно сейчас</li>
+          <li>Работаете по 12 часов, не помните, когда был выходной. Понимаете: ещё немного и сломаетесь</li>
+        </ul>
+        <p class="recognize__closer">Узнали себя? — Читайте дальше</p>
+      </div>
 
-        <div class="emotions-wrap" style="margin-top: 32px;">
+      <div class="recognize__col-right reveal">
+        <div class="emotions-wrap">
           <span class="recognize__sublabel">Что вы чувствуете прямо сейчас</span>
           <ul class="emotions">
             <li>Раздражение, что снова придётся проходить весь круг найма</li>
             <li>Тревогу, что повторите прошлую ошибку и опять потеряете 2–3 месяца</li>
-            <li>Усталость от того, что всё держится лично на вас</li>
+            <li>Усталость — всё держится лично на вас</li>
             <li>Стыд, что сами довели себя до 12-часового рабочего дня</li>
           </ul>
         </div>
-      </div>
-
-      <div class="recognize__col-right reveal">
-        <span class="recognize__sublabel">Ситуации</span>
-        <ul class="situations">
-          <li>Уже пробовали нанять ассистента сами. Кандидат ушёл через месяц или не подошёл, и вы остались с открытой вакансией и потерянным временем</li>
-          <li>Бизнес вырос, и теперь любой вопрос команды и клиентов летит лично вам. Вы стали бутылочным горлышком</li>
-          <li>Случилось важное событие: новый проект, ребёнок, переезд. Времени резко стало не хватать, и решение нужно сейчас</li>
-          <li>Работаете по 12 часов, не помните, когда был последний выходной. Понимаете: ещё немного, и сломаетесь</li>
-        </ul>
-        <p class="recognize__closer">Узнали себя? — Читайте дальше</p>
       </div>
     </div>
   </div>
